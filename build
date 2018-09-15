@@ -1,0 +1,53 @@
+#! /usr/bin/env python3
+
+"""
+---------------------------------------------------------------------------------------------
+# File    : build.py
+# Author  : Neo.H
+# Date    : Sep 14, 2018
+# Version : v1.00
+---------------------------------------------------------------------------------------------
+This is a build program for build up the simulation ENV. For now, mainly to provide the
+ENV environments, such as PROJ_HOME, PROJ_NAME etc. This program will provide the variables
+by printing these VARs to the screen, and the calling tool will access all these vars.
+---------------------------------------------------------------------------------------------
+Print Formats:
+	-- PROJ_HOME=<Absolute Path>
+---------------------------------------------------------------------------------------------
+Variables need to provide in current version:
+	-- PROJ_HOME
+---------------------------------------------------------------------------------------------
+Interfaces for this tool
+	-- Input Options:
+		-- No special inputs
+	-- Outputs:
+		-- print PROJ_HOME
+---------------------------------------------------------------------------------------------
+"""
+
+## imports
+import subprocess;
+
+## -- Global variables ----
+
+## g_rst
+## the global variable that indicates the exit SIGNAL of this program.
+##
+g_rst = 0;
+
+## this variable is used for python to compile the string to an object, and then
+## this object will be called as an argument to shell commands.
+g_sh_cmd = None;
+
+## -- Step 1. ---- get the proj_home,
+proj_home = None;
+
+## ------------------------------------------------------------------------------- ##
+## PROJ_HOME determination.
+##
+## to search the proj_home, first to get current directory,
+## ------------------------------------------------------------------------------- ##
+
+
+
+exit(g_rst);

@@ -1,0 +1,27 @@
+#! /usr/bin/env python3
+
+"""
+---------------------------------------------------------------------------------------------
+# File    : exception
+# Author  : Neo.H
+# Date    : Sep 14, 2018
+# Version : v1.00
+---------------------------------------------------------------------------------------------
+This is an exception processing class that define the exception SIG and all needed exception
+processing methods.
+---------------------------------------------------------------------------------------------
+"""
+
+
+class exception: ## {
+
+	## constructor of exception
+	##
+	def __init__: ## {
+	## }
+
+
+
+
+
+## }
