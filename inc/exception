@@ -10,13 +10,26 @@
 This is an exception processing class that define the exception SIG and all needed exception
 processing methods.
 ---------------------------------------------------------------------------------------------
+Supporting exception SIGs, these SIGs used in the different processes of run kit:
+	-- 0: normal level verbosity exit SIG.
+	-- 1: warning level verbosity exit SIG.
+	-- 2: error exit SIG, indicates the error occurred because of illegal input.
+	-- 3: error exit SIG, indicates the error caused by the target exiting program, though the
+	input is legal, the combination may cause errors.
+	-- 4: error exit SIG, indicates an unexcepted error occurred by the target program self.
+	-- 5: error exit SIG, this may occur when the condition triggered out of the consideration
+	of the developer.
+---------------------------------------------------------------------------------------------
+Supporting exception Exit, these SIGs will be used to report errors for the user who called
+the run command:
+	-- 0: normal exit SIG, no error will reported.
+---------------------------------------------------------------------------------------------
 """
 
 
-class exception: ## {
+class exc: ## {
 
 	## constructor of exception
-	##
 	def __init__: ## {
 	## }
 

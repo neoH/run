@@ -2,7 +2,7 @@
 
 """
 ---------------------------------------------------------------------------------------------
-# File    : build.py
+# File    : build
 # Author  : Neo.H
 # Date    : Sep 14, 2018
 # Version : v1.00
@@ -26,7 +26,8 @@ Interfaces for this tool
 """
 
 ## imports
-import subprocess;
+from exception import exc;
+from shell import sh;
 
 ## -- Global variables ----
 
@@ -47,7 +48,7 @@ proj_home = None;
 ##
 ## to search the proj_home, first to get current directory,
 ## ------------------------------------------------------------------------------- ##
-
+g_sh_cmd = 'pwd'; ## specify the command 'pwd'
 
 
 exit(g_rst);

@@ -1,0 +1,37 @@
+#! /usr/bin/env python3
+
+"""
+---------------------------------------------------------------------------------------------
+# File    : shell
+# Author  : Neo.H
+# Date    : Sep 19, 2018
+# Version : v1.00
+---------------------------------------------------------------------------------------------
+This is a python module to ease the shell command executions. In this file, common actions
+will be provided according to the coding style of the developer.
+---------------------------------------------------------------------------------------------
+"""
+
+import subprocess;
+
+
+class sh: ## {
+
+	## use the underscore preffixed to declare the local variable.
+	## this var indicates the command string used by current class.
+	_cmd = None;
+
+	def __init__(self, cmd = None): ## {
+		self._cmd = cmd;
+	## }
+
+	## an API to get the output information of target shell command.
+	## if command here not specified, then the program will check the command of class member: _cmd.
+	## if it is also not specified, then the program will report an error and exit this program.
+	##
+	def get_output(cmd = None): ## {
+	## }
+
+
+
+## }
