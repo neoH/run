@@ -23,17 +23,52 @@ Supporting exception SIGs, these SIGs used in the different processes of run kit
 Supporting exception Exit, these SIGs will be used to report errors for the user who called
 the run command:
 	-- 0: normal exit SIG, no error will reported.
+	-- 1: warning SIG, indicates user has entered a conflict but not critical combinative options.
+	-- 2: error SIG, indicates the user command error.
+	-- 3: error SIG, indicates the program error by developer.
+	-- 4:
 ---------------------------------------------------------------------------------------------
 """
 
+from report import rpt;
+import sys;
 
 class exc: ## {
+
+	_prog_exit_d = {
+		'NM'  : 0,
+		'WN'  : 1, ## warning signal
+		'UE'  : 2, ## indicates the error caused by user
+		'PE'  : 3, ## indicates the error caused by program
+	};
 
 	## constructor of exception
 	def __init__: ## {
 	## }
 
 
+	## this is a function to exit with PE verbosity. In this verbosity, the
+	## program will print a certain text for PE exiting.
+	##
+	def exit_pe(self): ## {
+		rpt.fatal("program exit with a critical fatal.");
+		sys.exit(_prog_exit_d['PE']);
+	## }
+
+	## this is a func. to exit with UE verbosity. This func. will be called when an
+	## error occurred.
+	##
+	def exit_ue(self): ## {
+		rpt.error("program exit with a user input error.");
+		sys.exit(_prog_exit_d['UE']);
+	## }
+
+	## this is a func. to exit with NM verbosity. This func. will be called when the
+	## program exit normally.
+	##
+	def exit_nm(self): ## {
+		sys.exit(_prog_exit_d['NM']);
+	## }
 
 
 

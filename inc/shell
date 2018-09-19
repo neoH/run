@@ -29,9 +29,37 @@ class sh: ## {
 	## if command here not specified, then the program will check the command of class member: _cmd.
 	## if it is also not specified, then the program will report an error and exit this program.
 	##
-	def get_output(cmd = None): ## {
+	def get_output(self,cmd = None): ## {
+		## step 1. to choose the arg of this function
+		vcmd = self.__get_vld_cmd__(cmd);
+
+		## step 2. calling shell commands by using the valid cmd
 	## }
 
+	def get_result(self,cmd = None): ## {
+	## }
+
+
+	## a internal func. of this class to get the valid command, if no caller enterred and no class default
+	## command, then the program will exit with a fatal.
+	def __get_vld_cmd__(self, cmd): ## {
+		r_cmd = None;
+		if cmd == None: ## {
+			## if cmd is None, then to check the self._cmd
+			## if self._cmd is not None, then assign self._cmd to cmd
+			if self._cmd == None: ## {
+				## if the command in class is also None, then need to print the PE exit process
+				rpt.fatal("[get_output] fatal occurred in report module, no command found."); ## call func. to report a fatal error.
+				exc.exit_pe();
+			## }
+			else: ## {
+				## else block, if the self._cmd is not None, but the cmd arg is None, then use self._cmd
+				##
+				r_cmd = self._cmd;
+			## }
+		## }
+		return r_cmd; ## return the valid cmd
+	## }
 
 
 ## }
