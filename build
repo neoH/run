@@ -40,7 +40,9 @@ sh = shell();
 
 ## RUN_HOME ENV are needed in ENV var.
 ##
-prog_home = sh.get_output('echo $RUN_HOME');
+## the return type of get_output is list, while the prog_home is string, so need
+## the following code for assignment.
+[prog_home] = sh.get_output('echo $RUN_HOME');
 if not prog_home:  ## {
 	print(" no $RUN_HOME VAR found in ENV, please setup your ENV first.");
 	sys.exit(127); ## system done, pre-build fatal.
@@ -62,9 +64,6 @@ exc = exception();
 ##
 g_rst = 0;
 
-## TODO ## this variable is used for python to compile the string to an object, and then
-## TODO ## this object will be called as an argument to shell commands.
-## TODO g_sh_cmd = None;
 
 ## -- Step 1. ---- get the proj_home,
 proj_home = None;
@@ -74,7 +73,9 @@ proj_home = None;
 ##
 ## to search the proj_home, first to get current directory,
 ## ------------------------------------------------------------------------------- ##
-g_cwd = sh.get_output('pwd'); ## this global variable to get current work dir of run tool
+
+## the return type of get_output is list, so need to do as following.
+[g_cwd] = sh.get_output('pwd'); ## this global variable to get current work dir of run tool
 
 ## if g_cwd is None, then need to exit with program error.
 if g_cwd == None: rpt.fatal("[__main__] no current work directory found."); exc.exit_pe();
