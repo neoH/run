@@ -23,11 +23,37 @@ Interfaces for this tool
 	-- Outputs:
 		-- print PROJ_HOME
 ---------------------------------------------------------------------------------------------
+PS: this is a built-in executable program called by run.
+---------------------------------------------------------------------------------------------
 """
 
 ## imports
-from exception import exc;
-from shell import sh;
+## import system modules.
+import sys;
+
+## imports
+## these import are from the common lib, so the path has been defined in ENV var.
+from shell import shell;
+import foper;
+
+sh = shell();
+
+## RUN_HOME ENV are needed in ENV var.
+##
+prog_home = sh.get_output('echo $RUN_HOME');
+if not prog_home:  ## {
+	print(" no $RUN_HOME VAR found in ENV, please setup your ENV first.");
+	sys.exit(127); ## system done, pre-build fatal.
+## }
+## else system not done, to add the $RUN_HOME/inc path to PYTHONPATH
+##
+sys.path.append(prog_home+'/inc');
+
+from exception import exception;
+import rpt;
+
+## instance exception
+exc = exception();
 
 ## -- Global variables ----
 
@@ -36,9 +62,9 @@ from shell import sh;
 ##
 g_rst = 0;
 
-## this variable is used for python to compile the string to an object, and then
-## this object will be called as an argument to shell commands.
-g_sh_cmd = None;
+## TODO ## this variable is used for python to compile the string to an object, and then
+## TODO ## this object will be called as an argument to shell commands.
+## TODO g_sh_cmd = None;
 
 ## -- Step 1. ---- get the proj_home,
 proj_home = None;
@@ -48,7 +74,19 @@ proj_home = None;
 ##
 ## to search the proj_home, first to get current directory,
 ## ------------------------------------------------------------------------------- ##
-g_sh_cmd = 'pwd'; ## specify the command 'pwd'
+g_cwd = sh.get_output('pwd'); ## this global variable to get current work dir of run tool
+
+## if g_cwd is None, then need to exit with program error.
+if g_cwd == None: rpt.fatal("[__main__] no current work directory found."); exc.exit_pe();
+
+## ----- here to continuous the process --------------------------------------------------
+## check current dir is the right work dir by checking the g_cwd/cfgs/proj_cfg file.
+## if the corresponding configure file not exists, then exit the program with UE SIG.
+if not foper.exists(g_cwd+'/cfgs/proj_cfg'): rpt.error("[__main__] current dir is not a correct work dir."); exc.exit_ue();
+## else to continue
+## display the g_cwd as PROJ_HOME.
+print ("PROJ_HOME="+g_cwd);
 
 
-exit(g_rst);
+## if the main program can executes here, then return with normal result.
+exc.exit_nm();

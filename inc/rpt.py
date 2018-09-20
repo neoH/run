@@ -2,7 +2,7 @@
 
 """
 ---------------------------------------------------------------------------------------------
-# File    : report
+# File    : rpt.py
 # Author  : Neo.H
 # Date    : Sep 19, 2018
 # Version : v1.00
@@ -11,17 +11,10 @@ This module encapsulates all report APIs for run tool.
 ---------------------------------------------------------------------------------------------
 """
 
-class rpt: ##{
+def fatal(msg): ## {
+	print ("[\033[32;0mFATAL\033[0m] "+msg);
+## }
 
-	def __init__(self): ## {
-	## }
-
-	def fatal(self,msg): ## {
-		print ("[\033[32;0mFATAL\033[0m] "+msg);
-	## }
-
-	def error(self,msg): ## {
-		print ("[\033[32;0mERROR\033[0m] "+msg);
-	## }
-
+def error(msg): ## {
+	print ("[\033[32;0mERROR\033[0m] "+msg);
 ## }

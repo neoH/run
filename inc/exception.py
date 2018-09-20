@@ -30,21 +30,18 @@ the run command:
 ---------------------------------------------------------------------------------------------
 """
 
-from report import rpt;
+import rpt;
 import sys;
 
-class exc: ## {
+class exception: ## {
 
-	_prog_exit_d = {
+	__prog_exit_d = {
 		'NM'  : 0,
 		'WN'  : 1, ## warning signal
 		'UE'  : 2, ## indicates the error caused by user
 		'PE'  : 3, ## indicates the error caused by program
 	};
 
-	## constructor of exception
-	def __init__: ## {
-	## }
 
 
 	## this is a function to exit with PE verbosity. In this verbosity, the
@@ -52,7 +49,7 @@ class exc: ## {
 	##
 	def exit_pe(self): ## {
 		rpt.fatal("program exit with a critical fatal.");
-		sys.exit(_prog_exit_d['PE']);
+		sys.exit(self.__prog_exit_d['PE']);
 	## }
 
 	## this is a func. to exit with UE verbosity. This func. will be called when an
@@ -60,14 +57,14 @@ class exc: ## {
 	##
 	def exit_ue(self): ## {
 		rpt.error("program exit with a user input error.");
-		sys.exit(_prog_exit_d['UE']);
+		sys.exit(self.__prog_exit_d['UE']);
 	## }
 
 	## this is a func. to exit with NM verbosity. This func. will be called when the
 	## program exit normally.
 	##
 	def exit_nm(self): ## {
-		sys.exit(_prog_exit_d['NM']);
+		sys.exit(self.__prog_exit_d['NM']);
 	## }
 
 
