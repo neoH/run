@@ -13,7 +13,7 @@ For simulation , there should be the specified compile.lis
 inputs:
 	-eda <edatool>, specify the eda tool, for now, valid only for VCS tool, and interfaces will
 be retained for other eda tools.
-	-h[elp], help option to display all valid options for fgen tool.
+	-help, help option to display all valid options for fgen tool.
 	-rtl <rtl_type>, specify the rtl type to lead the tool to generate the different combination
 of compile.lis. Default rtl_type is 'asic'.
 	-path <dest_path>, specify the path to generate the filelist, this is an optional param, if
@@ -61,3 +61,13 @@ sim_model.lis.
 ---------------------------------------------------------------------------------------------
 
 """
+from pcfg import fgen_cfg;
+from options import options;
+
+cfg = fgen_cfg();
+
+proj_home = '';
+
+o_path = '';
+
+## }
