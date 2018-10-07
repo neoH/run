@@ -62,11 +62,17 @@ class prog_cfg: ## {
 		"""
 		A func. to display help information. All display format are the same.
 		"""
+		opt_info = '';
+		self.__ver_display__(); ## a internal func. that should be overridden by derived class.
 		opts = self.__sopts.keys(); ## get the keys for options, the key is option name.
 		for opt in opts:
-			print("");
-			if opt['param']:
-				## if parameter exists, then need to print parameter information.
+			opt_info = opt['fmt']+opt;
+			if opt['param']: opt_info = opt_info+' <'+opt['param']+'>'; ## if parameter exists, then need to print parameter information.
+			opt_info = opt_info+': '+opt['desc']; ## add the semicolon and description.
+		return;
+	## }
+
+	def __ver_display__(self): ## {
 		return;
 	## }
 
