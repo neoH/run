@@ -12,7 +12,7 @@ For simulation , there should be the specified compile.lis
 ---------------------------------------------------------------------------------------------
 inputs:
 	-eda <edatool>, specify the eda tool, for now, valid only for VCS tool, and interfaces will
-be retained for other eda tools.
+be sustained for other eda tools, mainly for xcelium.
 	-help, help option to display all valid options for fgen tool.
 	-rtl <rtl_type>, specify the rtl type to lead the tool to generate the different combination
 of compile.lis. Default rtl_type is 'asic'.
