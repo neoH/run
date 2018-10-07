@@ -27,6 +27,10 @@ class proj_cfg: ## {
 
 
 class prog_cfg: ## {
+	"""
+	The program configure class. it is a base class used to store program configurations.
+	And this class will provide several APIs for all extending classes.
+	"""
 
 	## the example usage description, it is a list for using.
 	__usgs = [];
@@ -54,13 +58,26 @@ class prog_cfg: ## {
 
 
 	## func. to describe one option according to the specified option name.
-	def opt_desc(self, name): ## {
+	def opt_desc(self, name):
+		"""
+		A func. to display help information. All display format are the same.
+		"""
+		opts = self.__sopts.keys(); ## get the keys for options, the key is option name.
+		for opt in opts:
+			print("");
+			if opt['param']:
+				## if parameter exists, then need to print parameter information.
+		return;
 	## }
+
 
 ## }
 
 
 class fgen_cfg(prog_cfg): ## {
+	"""
+	It is a class derived from prog_cfg used by the program run-fgen
+	"""
 
 	def __init__(self): ## {
 		## initialize the fgen tool information.
