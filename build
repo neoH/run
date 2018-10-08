@@ -45,7 +45,7 @@ sh = shell();
 [prog_home] = sh.get_output('echo $RUN_HOME');
 if not prog_home:  ## {
 	print(" no $RUN_HOME VAR found in ENV, please setup your ENV first.");
-	sys.exit(127); ## system done, pre-build fatal.
+	sys.exit(126); ## system done, pre-build fatal.
 ## }
 ## else system not done, to add the $RUN_HOME/inc path to PYTHONPATH
 ##

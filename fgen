@@ -34,6 +34,7 @@ sim_model.lis will be generated nomatter files above exists or not.
 		-- wav: for wave vision, in this target, wave.lis, rtl.lis, fsim.lis and sim_model.lis will
 be generated nomatter files above exists or not.
 	-pt <proj_type>: the project type option, valid only within IP and SOC.
+	-debug: debug switch, if enterred, the debug information will be displayed.
 ---------------------------------------------------------------------------------------------
 outputs, for different target, different list will be generated.
 	sim:
@@ -52,6 +53,7 @@ RTL modules.
 ---------------------------------------------------------------------------------------------
 exit SIGs:
 	-- 0, a normal exit
+	-- 1, program fatal
 ---------------------------------------------------------------------------------------------
 generating considerations:
 	-- common dir will be included as +incdir+<commons>
@@ -61,15 +63,58 @@ sim_model.lis.
 ---------------------------------------------------------------------------------------------
 
 """
-from pcfg import fgen_cfg;
+
+import sys;
 from options import options;
+from shell import shell;
+
+
+## -- global vars declaration ----------------------------------------------------------------
+proj_home = '.'; ## default proj_home is current dir
+prog_home = '.'; ## default run_home is current dir
+o_path = '';
+g_opt_val = None;  ## for return value of pop_option func.
+__g_debug__ = False;
+## -------------------------------------------------------------------------------------------
+
+
+
+
+sh = shell();
+## RUN_HOME ENV are needed in ENV var.
+##
+## the return type of get_output is list, while the prog_home is string, so need
+## the following code for assignment.
+[prog_home] = sh.get_output('echo $RUN_HOME');
+if not prog_home:  ## {
+	print(" no $RUN_HOME VAR found in ENV, please setup your ENV first.");
+	sys.exit(1); ## system done, pre-build fatal.
+## }
+## else system not done, to add the $RUN_HOME/inc path to PYTHONPATH
+##
+sys.path.append(prog_home+'/inc');
+
+#################################
+import rpt;
+from pcfg import fgen_cfg;
+
+## after loading the system path, then to  check other options.
 
 cfg = fgen_cfg();
 
-## -- global vars declaration ----------------------------------------------------------------
-proj_home = '';
+## -- option process -------------------------------------------------------------------------
+g_opt = options();
+if g_opt.load(sys.argv,cfg.__sopts) == False: ## {
+	rpt.fatal("program fatal occurred when check option.");
+	exit(1);
 
-o_path = '';
+## }
+
+
+## check debug option first ##
+if g_opt.pop_option('debug') == True: __g_debug__ = True;
+##############################
+
 ## -------------------------------------------------------------------------------------------
 
 ## }

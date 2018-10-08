@@ -69,10 +69,14 @@ class prog_cfg: ## {
 			opt_info = opt['fmt']+opt;
 			if opt['param']: opt_info = opt_info+' <'+opt['param']+'>'; ## if parameter exists, then need to print parameter information.
 			opt_info = opt_info+': '+opt['desc']; ## add the semicolon and description.
+			print(opt_info);
 		return;
 	## }
 
 	def __ver_display__(self): ## {
+		"""
+		This func. should be overridden by extended classes.
+		"""
 		return;
 	## }
 
@@ -119,6 +123,8 @@ class fgen_cfg(prog_cfg): ## {
 		be generated nomatter files above exists or not.','target_name');
 
 		self.__add_opt('pt','-','the project type option, valid only within IP and SOC.','proj_type');
+
+		self.__add_opt('debug','-','the debug enable switch, use this option to display debug information.');
 
 		return; ## return void.
 	## }
