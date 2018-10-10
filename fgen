@@ -70,11 +70,7 @@ from shell import shell;
 
 
 ## -- global vars declaration ----------------------------------------------------------------
-proj_home = '.'; ## default proj_home is current dir
-prog_home = '.'; ## default run_home is current dir
-o_path = '';
-g_opt_val = None;  ## for return value of pop_option func.
-__g_debug__ = False;
+g_prog_home = '.'; ## default run_home is current dir
 ## -------------------------------------------------------------------------------------------
 
 
@@ -83,74 +79,40 @@ __g_debug__ = False;
 sh = shell();
 ## RUN_HOME ENV are needed in ENV var.
 ##
-## the return type of get_output is list, while the prog_home is string, so need
+## the return type of get_output is list, while the g_prog_home is string, so need
 ## the following code for assignment.
-[prog_home] = sh.get_output('echo $RUN_HOME');
-if not prog_home:  ## {
+[g_prog_home] = sh.get_output('echo $RUN_HOME');
+if not g_prog_home:  ## {
 	print(" no $RUN_HOME VAR found in ENV, please setup your ENV first.");
 	sys.exit(1); ## system done, pre-build fatal.
 ## }
 ## else system not done, to add the $RUN_HOME/inc path to PYTHONPATH
 ##
-sys.path.append(prog_home+'/inc');
+sys.path.append(g_prog_home+'/inc');
 
 #################################
-import rpt;
-from pcfg import fgen_cfg;
-
 ## after loading the system path, then to  check other options.
+import rpt;
+from pcfg_fgen import pcfg_fgen; ## the fgen program configure file.
 
-cfg = fgen_cfg();
+## after importing the pf module.
+pf = pcfg_fgen(sys.argv,rpt);
 
-## -- option process -------------------------------------------------------------------------
-g_opt = options();
-if g_opt.load(sys.argv,cfg.__sopts) == False: ## {
-	rpt.fatal("program fatal occurred when check option.");
-	exit(1);
-
+if pf.g_help:  ## {
+	## if help is True, then enter into help mode
+	pf.help();
+	sys.exit(0); ## then call normal exit
 ## }
 
-g_opt.set_support('eda','specify the eda tool, for now, valid only for VCS tool, and interfaces \
-	will be retained for other eda tools.','edatool');
-
-g_opt.set_support('help','help option to display all valid options for fgen tool.');
-
-g_opt.set_support('rtl','specify the rtl type to lead the tool to generate the different combination \
-	of compile.lis. Default rtl_type is \'asic\'.','rtl_type');
-
-g_opt.set_support('path','specify the path to generate the filelist, this is an optional param, if \
-	not specified, the default path: <proj_home>/out/sim/<rtl_type>/tests/ will be used.','dest_path');
-
-g_opt.set_support('proj_home','the project home specified by caller.','path');
-
-	self.__opt__.set_support('erf','external rtl file, this means the file should be added to rtl.lis, with \
-	different rtl mode, the erf can specify corresponding rtl modules.','file_name');
-
-	self.__opt__.set_support('y','to specify the library path, by different eda tools, this option will be \
-	translated to the corresponding options recognized by the tool. Besides, this option only \
-	support the eda tool that can support filelist option insertion.','library');
-
-	self.__opt__.set_support('libext','this option work together with -y option, to specify the searching \
-	file with specified extension. This option can be input with multiple times for specifying \
-	multiple extensions.','extensions');
-
-	self.__opt__.set_support('target','the option specify the destined usage for calling this tool. the \
-	target name for now are valid within: \
-	\n -- sim: for simulation, in this target, the compile.lis, rtl.lis, dpi.lis, fsim.lis and \
-	sim_model.lis will be generated nomatter files above exists or not. \
-	\n -- wav: for wave vision, in this target, wave.lis, rtl.lis, fsim.lis and sim_model.lis will \
-	be generated nomatter files above exists or not.','target_name');
-
-	self.__opt__.set_support('pt','the project type option, valid only within IP and SOC.','proj_type');
-
-	self.__opt__.set_support('debug','the debug enable switch, use this option to display debug information.');
-
+## TODO
 
 
 ## check debug option first ##
-if g_opt.pop_option('debug') == True: __g_debug__ = True;
 ##############################
 
 ## -------------------------------------------------------------------------------------------
+
+
+sys.exit(0); ## at the end of this program, exit normally
 
 ## }
