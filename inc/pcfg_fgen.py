@@ -62,62 +62,98 @@ class pcfg_fgen: ##
 	## the list to storing external rtl files, default is empty.
 	g_erfs = [];
 
+	## the list ot storing external sim_model files, default is empty.
+	g_esfs = [];
+
+	## the list storing all valid uvcs from user entering.
+	g_uvcs = [];
+
+	## the directory structure of current methodology.
+	##
+	g_hierachy = {
+		'design': {
+			'general': 'design/tops',
+			'asic'   : 'design/asic',
+			'fpga'   : 'design/fpga',
+			'gate'   : 'design/gate',
+		},
+		'sim_model': {
+			'general': 'verif/sim_model/general',
+			'asic'   : 'verif/sim_model/asic',
+			'fpga'   : 'verif/sim_model/fpga',
+		},
+		'fsim': {
+			'btest': 'verif/fsim/base_test',
+			'tests': 'verif/fsim/tests',
+			'tb'   : 'verif/fsim/tb',
+			'tenv' : 'verif/fsim/top_env',
+			'dpi'  : 'verif/fsim/dpi',
+			'rfm'  : 'verif/fsim/rfm',
+			'scb'  : 'verif/fsim/scoreboard',
+		},
+		'formal': {
+		},
+	};
+
 
 
 	def __init__(self,argvs,rpt): ## {
 		g_opt = options();
-		
-		g_opt.set_support('eda','\n\tspecify the eda tool, for now, valid only for VCS tool, \n\tand interfaces will be retained for other eda tools.','edatool');
-		
+
+		g_opt.set_support('eda','\n\tspecify the eda tool, for now, valid only for vcs tool, \n\tand interfaces will be retained for other eda tools.','edatool');
+
 		g_opt.set_support('help','\n\thelp option to display all valid options for fgen tool.');
-		
+
 		g_opt.set_support('rtl','\n\tspecify the rtl type to lead the tool to generate the different \n\tcombination of compile.lis. Default rtl_type is \'asic\'.','rtl_type');
-		
+
 		g_opt.set_support('path','\n\tspecify the path to generate the filelist, this is an optional param, \n\tif not specified, the default path: <proj_home>/out/sim/<rtl_type>/tests/ will be used.','dest_path');
-		
+
 		g_opt.set_support('proj_home','\n\tthe project home specified by caller.','path');
-		
-		g_opt.set_support('erf','\n\texternal rtl file, this means the file should be added to rtl.lis, \n\twith different rtl mode, the erf can specify corresponding rtl modules.','file_name');
-		
+
+		g_opt.set_support('erf','\n\texternal rtl file, this means the file should be added to rtl.lis, this option used to load common rtls, \n\twith different rtl mode, the erf can specify corresponding rtl modules.','file_name');
+
+		g_opt.set_support('esf','\n\texternal sim_model file, this means the file should be added to sim_model.lis, this option used to load common sim_models, \n\twith different rtl mode, the esf can specify corresponding sim_model modules.','file_name');
+
+		g_opt.set_support('uvc','\n\tspecify the uvc package with path.','uvc_pkg');
+
 		g_opt.set_support('y','\n\tto specify the library path, by different eda tools, this option will be \n\ttranslated to the corresponding options recognized by the tool. Besides, \n\tthis option only support the eda tool that can support filelist option insertion.','library');
-		
+
 		g_opt.set_support('libext','\n\tthis option work together with -y option, to specify the \n\tsearching file with specified extension. This option can be input \n\twith multiple times for specifying multiple extensions.','extensions');
-		
+
 		g_opt.set_support('target','\n\tthe option specify the destined usage for calling this tool. \n\tthe target name for now are valid within: \n <sim>: for simulation, in this target, the compile.lis, rtl.lis, \n\tdpi.lis, fsim.lis and sim_model.lis will be generated nomatter files above exists or not. \n <wav>: for wave vision, in this target, wave.lis, rtl.lis, fsim.lis \n\tand sim_model.lis will be generated nomatter files above exists or not.','target_name');
-		
-		g_opt.set_support('pt','\n\tthe project type option, valid only within IP and SOC.','proj_type');
-		
+
+		g_opt.set_support('pt','\n\tthe project type option, valid only within IP, SUBS and SOC.','proj_type');
+
 		g_opt.set_support('debug','\n\tthe debug enable switch, use this option to display debug information.');
-		
-		
+
+
 		## -- option process -------------------------------------------------------------------------
 		if g_opt.load(argvs) == False: ## {
 			rpt.fatal("program fatal occurred when check option.");
 			exit(1);
 		## }
-		
+
 		self.g_proj_home = g_opt.get_param('proj_home');
 		if self.g_proj_home == False: self.g_proj_home = './'; ## if the proj_home is not specified by user, then use default value: './'
-		
+
 		self.g_o_path = g_opt.get_param('path');
 		if self.g_o_path == False: self.g_o_path = './'; ## if the path not specified by user, then use default output path: './'.
-		
+
 		## the var that indicates the eda tool user want to use, then we will generate corresponding file list.
 		## value valid in range of: 'vcs' and 'xcelium'.
 		self.g_eda = g_opt.get_param('eda');
 		if self.g_eda == False: self.g_eda = 'vcs'; ## default use vcs tool if no user entered -eda
-		
+
 		while g_opt.exists('y'): ## {
 			## while the 'y' param exists, then to pop the param until all user entered -y are poped from the argv pool
 			self.g_lpaths.append(g_opt.get_param('y'));
 		## }
-		
-		
+
 		while g_opt.exists('libext'): ## {
 			## and this option can be specified by user with multiple times
 			self.g_libext.append(g_opt.get_param('libext'));
 		## }
-		
+
 		self.g_help = g_opt.exists('help');
 
 		self.g_debug = g_opt.exists('debug');
@@ -136,6 +172,16 @@ class pcfg_fgen: ##
 			self.g_erfs.append(g_opt.get_param('erf'));
 		## }
 
+		while g_opt.exists('esf'): ## {
+			## this option can be called multiple times for sim_model.
+			self.g_esfs.append(g_opt.get_param('esf'));
+		## }
+
+		while g_opt.exists('uvc'): ## {
+			## this option can be called multiple times for uvc packages.
+			self.g_uvcs.append(g_opt.get_param('uvc'));
+		## }
+
 		return;
 
 	## }
@@ -152,5 +198,3 @@ class pcfg_fgen: ##
 
 
 ## }
-
-

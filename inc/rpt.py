@@ -18,3 +18,7 @@ def fatal(msg): ## {
 def error(msg): ## {
 	print ("[\033[32;0mERROR\033[0m] "+msg);
 ## }
+
+def info(msg): ## {
+	print (msg);
+## }

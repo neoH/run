@@ -54,6 +54,7 @@ RTL modules.
 exit SIGs:
 	-- 0, a normal exit
 	-- 1, program fatal
+	-- 2, program process error
 ---------------------------------------------------------------------------------------------
 generating considerations:
 	-- common dir will be included as +incdir+<commons>
@@ -94,6 +95,7 @@ sys.path.append(g_prog_home+'/inc');
 ## after loading the system path, then to  check other options.
 import rpt;
 from pcfg_fgen import pcfg_fgen; ## the fgen program configure file.
+import fi; ## fgen include file, store all used sub routines.
 
 ## after importing the pf module.
 pf = pcfg_fgen(sys.argv,rpt);
@@ -104,12 +106,34 @@ if pf.g_help:  ## {
 	sys.exit(0); ## then call normal exit
 ## }
 
-## TODO
+## -------------------------------------------------------------------------------------------
+## Program Process:
+##
+## -------------------------------------------------------------------------------------------
 
+## step 1. get eda tool ----------------------------------------------------------------------
+if pf.g_eda == 'vcs':
+	## block to process vcs tool, according to target: SIM/WAV
+	if pf.g_target == 'sim':
+		## in sim mode, following files are need:
+		## <o_path>/compile.lis
+		##
+		rtls = fi.get_rtls(pf);
+		if fi.gen_rtl_lis(rtls) == False: sys.exit(2);
+	else:
+		## else the target is WAV, used in verdi, need a special list
+		##
+	## }
+else:
+	## else use candence tool, here is TBD
+	## TODO
+	rpt.fatal("current version support vcs tool only.");
+	sys.exit(1);
+## }
 
-## check debug option first ##
-##############################
+## -------------------------------------------------------------------------------------------
 
+## -------------------------------------------------------------------------------------------
 ## -------------------------------------------------------------------------------------------
 
 
