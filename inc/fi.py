@@ -103,7 +103,7 @@ def get_rtl_srcs(proj_home,hierachy,rtl_t,debug): ## {
 	return srcs;
 ## }
 
-def get_rtls(pf):
+def get_rtls(pf): ## {
 	"""
 	Program to get all rtl files, and store to a list var.
 	"""
@@ -111,10 +111,10 @@ def get_rtls(pf):
 	if pf == None: return rtls; ## if input pf is null, then return an empty list
 	## else pf not null.
 	if pf.g_debug: debug_info('get_rtls',"current program now in "+pf.g_pt+" mode.");
-	if pf.g_pt   == 'IP':
+	if pf.g_pt   == 'IP': ## {
 		## to process in IP project type
 		## in IP mode, need to select following rtl type: asic/fpga or gate
-		if pf.g_rtl_t == 'asic':
+		if pf.g_rtl_t == 'asic': ## {
 			## in asic mode, to do the following with ordering
 			## 1. commons rtl, which given by the user, stored in pf.g_erfs
 			## 2. asic rtl
@@ -129,15 +129,32 @@ def get_rtls(pf):
 			inc_reorder(rtls); ## reorder, to set *_def.h file to the front of the list and *_udef.h file to the bottom of the list
 			get_incdir(rtls);  ## add incdir to the top of list.
 			return rtls; ## now return the rtl list.
-
-		elif pf.g_rtl_t == 'fpga':
+		## }
+		elif pf.g_rtl_t == 'fpga': ## {
 			## in fpga mode, to do the following with ordering
 			## 1. commons rtl
 			## 2. fpga rtl
 			## 3. general rtl
-		else:
-			## in fpga mode, to do the following with ordering
+			if len(pf.g_erfs) != 0: rtls.extend(pf.g_erfs); ## if erfs has item here, then to add to the rtls list.
+			fpga_incs = get_rtl_incs(pf.g_proj_home,pf.g_hierachy,pf.g_rtl_t,pf.g_debug);
+
+			## after getting cinlude file for fpga mode, then need to get source file of fpga.
+			fpga_srcs = get_rtl_srcs(pf.g_proj_home,pf.g_hierachy,pf.g_rtl_t,pf.g_debug);
+
+			rtls.extend(fpga_incs);rtls.extend(fpga_srcs); ## merge the two temple list into rtls
+			inc_reorder(rtls); ## reorder all inc files in the rtls list.
+			get_incdir(rtls); ## add incdir for all incs and srcs
+			return rtls;
+		## }
+		else: ## {
+			## in gate mode, to do the following with ordering
 			## 2. gate rtl
+			## for gate mode, only files in gate/v/ will be collected.
+			if len(pf.g_erfs) != 0: rtls.extend(pf.g_erfs); ## if erfs has item here, then to add to the rtls list.
+			gate_srcs = get_rtl_srcs(pf.g_proj_home,pf.g_hierachy,pf.g_rtl_t,pf.debug);
+			rtls.extend(gate_srcs); ## merge all gate_srcs into rtls.
+			get_incdir(rtls);
+			return rtls;
 		## }
 	## }
 	elif pf.g_pt == 'SUBS':
