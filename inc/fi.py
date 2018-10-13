@@ -156,7 +156,7 @@ def get_rtls(pf): ## {
 			get_incdir(rtls);
 			return rtls;
 		## }
-	## }
+	## end of IP branch }
 	elif pf.g_pt == 'SUBS':
 	## }
 	else:
