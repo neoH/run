@@ -12,6 +12,7 @@
 """
 
 from shell import shell;
+import foper;
 import re;
 
 def debug_info(ID,msg):
@@ -176,4 +177,7 @@ def gen_rtl_lis(rtls,opath):
 	----------------------------------------------------------------------------------------
 	if target file exists, then it will be override.
 	"""
+	foper.write_cnts(opath+'/rtl.lis',rtls);
+
+	return True;
 ## end def }
