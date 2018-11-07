@@ -136,8 +136,6 @@ class pcfg_fgen: ##
 		self.g_proj_home = g_opt.get_param('proj_home');
 		if self.g_proj_home == False: self.g_proj_home = './'; ## if the proj_home is not specified by user, then use default value: './'
 
-		self.g_o_path = g_opt.get_param('path');
-		if self.g_o_path == False: self.g_o_path = './'; ## if the path not specified by user, then use default output path: './'.
 
 		## the var that indicates the eda tool user want to use, then we will generate corresponding file list.
 		## value valid in range of: 'vcs' and 'xcelium'.
@@ -166,6 +164,10 @@ class pcfg_fgen: ##
 
 		self.g_pt = g_opt.get_param('pt');
 		if self.g_pt == False: self.g_pt = 'IP'; ## if get the False param, then use default: 'IP'
+
+		self.g_o_path = g_opt.get_param('path');
+		if self.g_o_path == False: self.g_o_path = self.g_proj_home+'/out/sim/'+self.g_rtl_t+'/tests'; ## if the path not specified by user, then use default output path .
+
 
 		while g_opt.exists('erf'); ## {
 			## this option can be called multiple times.

@@ -2,7 +2,7 @@
 
 """
 ---------------------------------------------------------------------------------------------
-# File    : fi.py
+# File    : fi.py (fgen include file)
 # Author  : Neo.H
 # Date    : Oct 11, 2018
 # Version : v1.00
@@ -162,4 +162,18 @@ def get_rtls(pf): ## {
 	else:
 		## SOC level
 	## }
+## end def }
+
+def gen_rtl_lis(rtls,opath):
+	"""
+	this is a func. to gen the rtl list to a list file according to the input file list.
+	the argument needed is:
+	-- rtl list
+	-- target o_path.
+	----------------------------------------------------------------------------------------
+	if file generated with error occurrs, then to return False and print error information,
+	because no error message will be printed in main program.
+	----------------------------------------------------------------------------------------
+	if target file exists, then it will be override.
+	"""
 ## end def }

@@ -74,9 +74,6 @@ from shell import shell;
 g_prog_home = '.'; ## default run_home is current dir
 ## -------------------------------------------------------------------------------------------
 
-
-
-
 sh = shell();
 ## RUN_HOME ENV are needed in ENV var.
 ##
@@ -98,7 +95,7 @@ from pcfg_fgen import pcfg_fgen; ## the fgen program configure file.
 import fi; ## fgen include file, store all used sub routines.
 
 ## after importing the pf module.
-pf = pcfg_fgen(sys.argv,rpt);
+##pf = pcfg_fgen(sys.argv,rpt);
 
 if pf.g_help:  ## {
 	## if help is True, then enter into help mode
@@ -111,17 +108,24 @@ if pf.g_help:  ## {
 ##
 ## -------------------------------------------------------------------------------------------
 
+## first to get the common list between wave list and simulation list.
+## the only difference between verdi and simulation is dpi.lis
+##
+rtls = fi.get_rtls(pf);
+if fi.gen_rtl_lis(rtls,pf.g_o_path) == False: sys.exit(2);
+
+## ----------------------------------------------------------------------------------------
+
 ## step 1. get eda tool ----------------------------------------------------------------------
 if pf.g_eda == 'vcs':
 	## block to process vcs tool, according to target: SIM/WAV
+
 	if pf.g_target == 'sim':
 		## in sim mode, following files are need:
 		## <o_path>/compile.lis
 		##
-		rtls = fi.get_rtls(pf);
-		if fi.gen_rtl_lis(rtls) == False: sys.exit(2);
 	else:
-		## else the target is WAV, used in verdi, need a special list
+		## else the target is WAV, used in verdi, need a special list that excluding the dpi list.
 		##
 	## }
 else:
