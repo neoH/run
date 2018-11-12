@@ -15,6 +15,8 @@ from shell import shell;
 import foper;
 import re;
 
+__rtl_lis__ = 'rtl.lis';
+
 def debug_info(ID,msg):
 	## print debug information
 	print ("[__DBG__]["+ID+"] "+msg);
@@ -165,19 +167,16 @@ def get_rtls(pf): ## {
 	## }
 ## end def }
 
-def gen_rtl_lis(rtls,opath):
+def gen_rtl_lis(contents, opath = ""):
 	"""
-	this is a func. to gen the rtl list to a list file according to the input file list.
-	the argument needed is:
-	-- rtl list
-	-- target o_path.
-	----------------------------------------------------------------------------------------
-	if file generated with error occurrs, then to return False and print error information,
-	because no error message will be printed in main program.
-	----------------------------------------------------------------------------------------
-	if target file exists, then it will be override.
+	this func. to generate rtl list according to input contents, current function will call foper.write_cnts
+	directly.
 	"""
-	foper.write_cnts(opath+'/rtl.lis',rtls);
-
-	return True;
+	foper.write_cnts(opath+'/'+__rtl_lis__,contents);
 ## end def }
+
+
+def get_sim_models ():
+
+
+## end def %

@@ -21,6 +21,8 @@ not specified, the default path: <proj_home>/out/sim/<rtl_type>/tests/ will be u
 	-proj_home <path>, the project home specified by caller.
 	-erf <file_name>, external rtl file, this means the file should be added to rtl.lis, with
 different rtl mode, the erf can specify corresponding rtl modules.
+	-esf <file_name>, TBD
+	-uvc <uvc_name>, TBD
 	-y <libraries>, to specify the library path, by different eda tools, this option will be
 translated to the corresponding options recognized by the tool. Besides, this option only
 support the eda tool that can support filelist option insertion.
@@ -78,6 +80,18 @@ from options import options;
 from shell import shell;
 import foper;
 
+## exit SIGs when executing this program
+## this exit SIG defines in this program and is used as a protocol interface
+## for other programs which calls fgen
+
+g_sig{} = {
+	'normal' : 0,   ## normal exit, with no any other errors.
+	'rtle'   : 1,   ## error occurred when generating RTL list.
+	'sme'    : 2,   ## error occurred when generating sim model list
+	'verife' : 3,   ## error occurred when generating verify list.
+};
+
+###########################################################################
 
 ## -- global vars declaration ----------------------------------------------------------------
 g_prog_home = '.'; ## default run_home is current dir
@@ -109,7 +123,7 @@ pf = pcfg_fgen(sys.argv,rpt);
 if pf.g_help:  ## {
 	## if help is True, then enter into help mode
 	pf.help();
-	sys.exit(0); ## then call normal exit
+	sys.exit(g_sig['normal']); ## then call normal exit
 ## }
 
 ## -------------------------------------------------------------------------------------------
@@ -121,11 +135,16 @@ if pf.g_help:  ## {
 ## the only difference between verdi and simulation is dpi.lis
 ##
 
+## ----------------------------------------------------------------------- ##
+## this block to generate common file lists for almost all simulation tools
+##
 ## -- get rtl list file
-rtls = fi.get_rtls(pf);
-if fi.gen_rtl_lis(rtls,pf.g_o_path) == False: sys.exit(2);
+if fi.gen_rtl_lis(pf) == False: sys.exit();
+##if fi.gen_rtl_lis(rtls,pf.g_o_path) == False: sys.exit(2);
 
 ## -- get sim_model list file.
+
+## ----------------------------------------------------------------------- ##
 
 ## ----------------------------------------------------------------------------------------
 
